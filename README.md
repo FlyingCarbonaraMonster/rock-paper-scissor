@@ -1,0 +1,1 @@
+This project is a simple rock, paper and scissors game.
