@@ -4,9 +4,7 @@ let playerChoice = "";
 let computerChoice = "";
 let ties = 0; 
 
-const rock = document.querySelector('#rock');
-const paper = document.querySelector('#paper');
-const scissors = document.querySelector('#scissors');
+const btnChoices = document.querySelectorAll('.btn')
 const results = document.querySelector('#results');
 const reset = document.querySelector('#reset');
 
@@ -23,74 +21,69 @@ function getComputerChoice() {
     }
 }
 
-rock.addEventListener('click', () => {
-    playerChoice = "rock";
-    computerChoice = getComputerChoice();
-    playRound(playerChoice, computerChoice);
-});
-
-paper.addEventListener('click', () => {
-    playerChoice = "paper";
-    computerChoice = getComputerChoice();
-    playRound(playerChoice, computerChoice);
-});
-
-scissors.addEventListener('click', () => {
-    playerChoice = "scissors";
-    computerChoice = getComputerChoice();
-    playRound(playerChoice, computerChoice);
+btnChoices.forEach((btn) => {
+    btn.addEventListener('click', () => {
+        playerChoice = btn.id;
+        computerChoice = getComputerChoice();
+        playRound(playerChoice, computerChoice);
+    });
 });
 
 reset.addEventListener('click', () => {
     humanScore = 0;
     computerScore = 0;
     ties = 0;
+
+    btnChoices.forEach((btn) => {
+        btn.style.display = "inline-block";
+    });
     
-    rock.style.display = "inline-block";
-    paper.style.display = "inline-block";
-    scissors.style.display = "inline-block";
     reset.style.display = "none";
     results.textContent = `Human: ${humanScore} - Computer ${computerScore}`;
 
 });
 
 function playRound(humanChoice, computerChoice) {
+    let roundMessage = "";
+
     if (humanChoice === computerChoice) {
         ties++;
-        results.textContent = `Human: ${humanScore} - Computer ${computerScore}\nIt's a tie!`;
+        roundMessage = "It's a tie!";
     }
 
     if (humanChoice === "rock" && computerChoice === "paper") {
         computerScore++;
-        results.textContent = `Human: ${humanScore} - Computer ${computerScore}\nComputer win!`;
+        roundMessage = "Computer win!";
     } else if (humanChoice === "rock" && computerChoice === "scissors") {
         humanScore++;
-        results.textContent = `Human: ${humanScore} - Computer ${computerScore}\nYou win!`;
+        roundMessage = "You win!";
     } else if (humanChoice === "paper" && computerChoice === "rock") {
         humanScore++;
-        results.textContent = `Human: ${humanScore} - Computer ${computerScore}\nYou win!`;
+        roundMessage = "You win!";
     } else if (humanChoice === "paper" && computerChoice === "scissors") {
         computerScore++;
-        results.textContent = `Human: ${humanScore} - Computer ${computerScore}\nComputer win!`;
+        roundMessage = "Computer win!";
     } else if (humanChoice === "scissors" && computerChoice === "paper") {
         humanScore++;
-        results.textContent = `Human: ${humanScore} - Computer ${computerScore}\nYou win!`;
+        roundMessage = "You win!";
     } else if (humanChoice === "scissors" && computerChoice === "rock") {
         computerScore++;
-        results.textContent = `Human: ${humanScore} - Computer ${computerScore}\nComputer win!`;
+        roundMessage = "Computer win!";
     }
 
-    if (humanScore === 5) {
-        results.textContent = "You won the game! Want to play again?";
-        rock.style.display = "none";
-        paper.style.display = "none";
-        scissors.style.display = "none";
+    results.textContent = `Human: ${humanScore} - Computer: ${computerScore}\n${roundMessage}`;
+
+    if (humanScore === 5 || computerScore === 5) {
+        btnChoices.forEach((btn) => {
+            btn.style.display = "none";
+        })
+        
         reset.style.display = "block";
-    } else if (computerScore === 5) {
-        results.textContent = "The computer won the game! Want to play again?";
-        rock.style.display = "none";
-        paper.style.display = "none";
-        scissors.style.display = "none";
-        reset.style.display = "block";
+        
+        if (humanScore === 5) {
+            results.textContent = "You won the game! Want to play again?";
+        } else {
+            results.textContent = "The computer won the game! Want to play again?";
+        }
     }
 }
